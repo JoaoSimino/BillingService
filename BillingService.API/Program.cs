@@ -1,10 +1,17 @@
+using BillingService.Infrastructure.Messaging;
+
 var builder = WebApplication.CreateBuilder(args);
 
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddSingleton<IMessageConsumer, RabbitMQConsumer>();
+
 var app = builder.Build();
+
+var consumer = app.Services.GetRequiredService<IMessageConsumer>();
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -15,6 +22,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+_ = consumer.ReceiveAsync(CancellationToken.None);// inicia a escuta em background
 app.Run();
 
 

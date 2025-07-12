@@ -1,6 +1,5 @@
 ﻿
 using BillingService.Domain.Entities;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
@@ -26,7 +25,7 @@ public class RabbitMQConsumer : IMessageConsumer
     }
 
 
-    public async Task ReceiveAsync(CancellationToken cancellationToken)
+    public async Task ReceiveAsync(Func<PropostaAprovadaEvent, Task> handleEvent, CancellationToken cancellationToken)
     {
         using var connection = await _factory.CreateConnectionAsync();
         using var channel = await connection.CreateChannelAsync();
@@ -50,8 +49,8 @@ public class RabbitMQConsumer : IMessageConsumer
                 _logger.LogInformation("Evento recebido: {PropostaId}", evento?.PropostaId);
                 Console.WriteLine($"Evento recebido: {evento?.PropostaId}" );
 
-                // TODO: lógica de faturamento
-                await Task.CompletedTask;
+                if (evento is not null)//chamando evento delegado que deve efetuar logica e ter acesso aos servicos da API!
+                    await handleEvent(evento);
             }
             catch (Exception ex)
             {

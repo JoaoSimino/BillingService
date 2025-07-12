@@ -1,11 +1,16 @@
 using BillingService.Application.Services;
+using BillingService.Infrastructure.Data;
 using BillingService.Infrastructure.Messaging;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddDbContext<BillingServiceContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddSingleton<IMessageConsumer, RabbitMQConsumer>();
 builder.Services.AddScoped<IPropostaAprovadaEventService, PropostaAprovadaEventService>();
@@ -14,7 +19,11 @@ builder.Services.AddScoped<IPropostaAprovadaEventService, PropostaAprovadaEventS
 var app = builder.Build();
 
 var consumer = app.Services.GetRequiredService<IMessageConsumer>();
-var propostaService = app.Services.GetRequiredService<IPropostaAprovadaEventService>();
+
+//migrar futuramente para solucao com BackgroundService , e e injetar os serviços corretamente no construtor.
+//como alternativa mais escalável
+using var scope = app.Services.CreateScope();
+var propostaService = scope.ServiceProvider.GetRequiredService<IPropostaAprovadaEventService>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

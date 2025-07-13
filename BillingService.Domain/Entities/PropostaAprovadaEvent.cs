@@ -8,5 +8,7 @@ public class PropostaAprovadaEvent
     public decimal ValorAprovado { get; set; }
 
     public DateTime DataRecebimento { get; set; }
+    public StatusProcessamento StatusProcessamento { get; set; } = StatusProcessamento.FaturaPendente;
+
 
 }

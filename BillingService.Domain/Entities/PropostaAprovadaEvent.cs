@@ -10,5 +10,7 @@ public class PropostaAprovadaEvent
     public DateTime DataRecebimento { get; set; }
     public StatusProcessamento StatusProcessamento { get; set; } = StatusProcessamento.FaturaPendente;
 
+    public Fatura? Fatura { get; set; }
+
 
 }

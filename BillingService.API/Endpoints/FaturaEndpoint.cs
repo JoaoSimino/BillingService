@@ -9,7 +9,7 @@ public static class FaturaEndpoint
     {
         var group = routes.MapGroup("/api/Fatura").WithTags(nameof(Fatura));
 
-        group.MapGet("/{id}", async (IFaturaService service, Guid clientId) =>
+        group.MapGet("/Cliente/{id}", async (IFaturaService service, Guid clientId) =>
         {
             var fatura = await service.GetFaturaByClientId(clientId);
 

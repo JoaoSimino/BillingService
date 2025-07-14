@@ -1,5 +1,7 @@
 ﻿using BillingService.Application.Services;
+using BillingService.Domain.DTOs;
 using BillingService.Domain.Entities;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace BillingService.API.Endpoints;
 
@@ -25,7 +27,41 @@ public static class PropostaAprovadaEventoEndpoint
         .WithName("GetAllProposals")
         .WithOpenApi();
 
+        group.MapGet("/{id}", async (IPropostaAprovadaEventService service, Guid id) =>
+        {
+            var propostaAprovada = await service.GetByIdAsync(id);
 
+            return new {
+                propostaAprovada.Id,
+                propostaAprovada.PropostaId,
+                propostaAprovada.ClienteId,
+                propostaAprovada.ValorAprovado,
+                propostaAprovada.DataRecebimento,
+                propostaAprovada.StatusProcessamento
+            };
+        })
+        .WithName("GetAllProposalsById")
+        .WithOpenApi();
+
+        group.MapGet("/{id}/opcoes-de-pagamento", async (IPropostaAprovadaEventService service, Guid id) =>
+        {
+       
+            return await service.CalcularOpcoesPagamentoAsync(id);
+        })
+        .WithName("GetAllPaymentOptionsByProposalId")
+        .WithOpenApi();
+
+        group.MapPost("/{id}/opcoes-de-pagamento", async (
+            Guid id,
+            IPropostaAprovadaEventService service,
+            OpcaoPagamentoDto opcaoDto
+            ) =>
+        {
+            await service.InformarOpcaoSelecionada(id, opcaoDto);
+            return TypedResults.Ok();
+        })
+        .WithName("SetPaymentOptionsByProposalId")
+        .WithOpenApi();
 
     }
 }

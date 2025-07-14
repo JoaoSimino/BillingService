@@ -83,10 +83,8 @@ public class PropostaAprovadaEventService : CrudService<PropostaAprovadaEvent>, 
                 Id = Guid.NewGuid(),
                 FaturaId = idFatura,
                 Numero = i + 1,
-                
-                Valor = propostaAprovada.OpcaoPagamentoSelecionada.ComJuros ?
-                    Math.Round(propostaAprovada.OpcaoPagamentoSelecionada.ValorTotalComJuros / numeroDeParcelas, 2) :
-                    Math.Round(propostaAprovada.OpcaoPagamentoSelecionada.ValorParcela / numeroDeParcelas, 2),
+
+                Valor = propostaAprovada.OpcaoPagamentoSelecionada.ValorParcela,
 
                 Status = StatusParcela.Pendente,
                 DataVencimento = DateTime.Now.AddMonths(i + 1),

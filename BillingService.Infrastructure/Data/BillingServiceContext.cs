@@ -21,6 +21,9 @@ public class BillingServiceContext : DbContext
             .WithOne(f => f.PropostaAprovadaEvent)
             .HasForeignKey<Fatura>(f => f.PropostaAprovadaEventId);
 
+        modelBuilder.Entity<PropostaAprovadaEvent>()
+            .OwnsOne(pae => pae.OpcaoPagamentoSelecionada);
+
         modelBuilder.Entity<Fatura>()
             .HasMany(f => f.Parcelas)
             .WithOne(p => p.Fatura)

@@ -12,5 +12,7 @@ public class PropostaAprovadaEvent
 
     public Fatura? Fatura { get; set; }
 
+    public OpcaoPagamento? OpcaoPagamentoSelecionada { get; set; }
+
 
 }

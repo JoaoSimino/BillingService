@@ -6,8 +6,13 @@ namespace BillingService.Application.Services;
 
 public class PropostaAprovadaEventService : CrudService<PropostaAprovadaEvent>, IPropostaAprovadaEventService
 {
-    public PropostaAprovadaEventService(BillingServiceContext context) : base(context)
-    {     
+    private readonly IFaturaService _faturaService;
+    private readonly IParcelaService _parcelaService;
+
+    public PropostaAprovadaEventService(BillingServiceContext context, IFaturaService faturaService, IParcelaService parcelaService) : base(context)
+    {
+        _faturaService = faturaService;
+        _parcelaService = parcelaService;
     }
 
     public async Task<List<OpcaoPagamento>> CalcularOpcoesPagamentoAsync(Guid id)
@@ -63,7 +68,37 @@ public class PropostaAprovadaEventService : CrudService<PropostaAprovadaEvent>, 
         if (propostaAprovada is null)
             throw new Exception("Proposta aprovada não encontrada.");
         propostaAprovada.OpcaoPagamentoSelecionada = opcao;
+
         //logica para geracao de fatura, ja com as informacoes necessarias!
+
+        var idFatura = Guid.NewGuid();
+        var numeroDeParcelas = propostaAprovada.OpcaoPagamentoSelecionada.QuantidadeParcelas;
+
+        var ListaDeParcelas = new List<Parcela>();
+        
+        for (int i =0; i < numeroDeParcelas; i++) 
+        {
+            var parcela = new Parcela
+            {
+                Id = Guid.NewGuid(),
+                FaturaId = idFatura,
+                Numero = i + 1,
+                Valor = propostaAprovada.OpcaoPagamentoSelecionada.ComJuros ?
+                    propostaAprovada.OpcaoPagamentoSelecionada.ValorTotalComJuros : propostaAprovada.OpcaoPagamentoSelecionada.ValorParcela,
+                Status = StatusParcela.Pendente,
+                DataVencimento = DateTime.Now.AddMonths(i + 1),
+            };
+            ListaDeParcelas.Add(parcela);
+        }
+
+        var fatura = new Fatura{
+            Id = idFatura,
+            PropostaAprovadaEventId = propostaAprovada.Id,
+            NumeroParcelas = numeroDeParcelas,
+            DataCriacao = DateTime.Now,
+            Status = StatusFatura.Pendente,
+            Parcelas = ListaDeParcelas
+        };
 
         propostaAprovada.StatusProcessamento = StatusProcessamento.FaturaGerada;
         await _context.SaveChangesAsync();

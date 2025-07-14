@@ -20,6 +20,8 @@ builder.Services.AddDbContext<BillingServiceContext>(options =>
 
 builder.Services.AddSingleton<IMessageConsumer, RabbitMQConsumer>();
 builder.Services.AddScoped<IPropostaAprovadaEventService, PropostaAprovadaEventService>();
+builder.Services.AddScoped<IFaturaService, FaturaService>();
+builder.Services.AddScoped<IParcelaService, ParcelaService>();
 
 
 var app = builder.Build();

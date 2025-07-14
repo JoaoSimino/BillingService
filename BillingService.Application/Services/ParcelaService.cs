@@ -25,6 +25,7 @@ public class ParcelaService : CrudService<Parcela> ,IParcelaService
         if (parcela is not null && parcela.Status == StatusParcela.Pendente) 
         {
             parcela.Status = StatusParcela.Paga;
+            parcela.DataPagamento = DateTime.Now;
         }
         await _context.SaveChangesAsync();
     }

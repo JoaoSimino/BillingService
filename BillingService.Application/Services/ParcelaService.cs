@@ -10,11 +10,22 @@ public class ParcelaService : CrudService<Parcela> ,IParcelaService
     {    
     }
 
-    public async Task<IEnumerable<Parcela>> GetParcelaByFaturaId(Guid faturaId)
+    public async Task<IEnumerable<Parcela>> GetParcelaByFaturaIdAsync(Guid faturaId)
     {
         return await _context.Set<Parcela>()
             .Include(p => p.Fatura)
             .OrderBy(p => p.Numero)
             .Where(p => p.FaturaId == faturaId).ToListAsync();
+    }
+
+    public async Task RealizarPagamentoAsync(Guid parcelaId)
+    {
+        var parcela = await _context.Set<Parcela>()
+            .FindAsync(parcelaId);
+        if (parcela is not null && parcela.Status == StatusParcela.Pendente) 
+        {
+            parcela.Status = StatusParcela.Paga;
+        }
+        await _context.SaveChangesAsync();
     }
 }

@@ -11,7 +11,7 @@ public class FaturaService : CrudService<Fatura> , IFaturaService
     {
     }
 
-    public async Task<FaturaDtoResponse> GetFaturaByClientId(Guid clientId)
+    public async Task<FaturaDtoResponse> GetFaturaByClientIdAsync(Guid clientId)
     {
         var fatura = await _context.Set<Fatura>()
             .Include(f => f.PropostaAprovadaEvent)

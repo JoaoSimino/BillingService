@@ -4,5 +4,7 @@ namespace BillingService.Application.Services;
 
 public interface IParcelaService : ICrudService<Parcela>
 {
-    public Task<IEnumerable<Parcela>> GetParcelaByFaturaId(Guid id);
+    public Task<IEnumerable<Parcela>> GetParcelaByFaturaIdAsync(Guid id);
+
+    public Task RealizarPagamentoAsync(Guid id);
 }

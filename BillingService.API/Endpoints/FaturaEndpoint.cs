@@ -11,7 +11,7 @@ public static class FaturaEndpoint
 
         group.MapGet("/Cliente/{id}", async (IFaturaService service, Guid clientId) =>
         {
-            var fatura = await service.GetFaturaByClientId(clientId);
+            var fatura = await service.GetFaturaByClientIdAsync(clientId);
 
             return fatura;
         })

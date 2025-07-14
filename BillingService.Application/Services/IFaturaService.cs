@@ -5,5 +5,5 @@ namespace BillingService.Application.Services;
 
 public interface IFaturaService : ICrudService<Fatura>
 {
-    public Task<FaturaDtoResponse> GetFaturaByClientId(Guid id);
+    public Task<FaturaDtoResponse> GetFaturaByClientIdAsync(Guid id);
 }

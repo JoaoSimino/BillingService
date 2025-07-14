@@ -1,13 +1,19 @@
+using BillingService.API.Endpoints;
 using BillingService.Application.Services;
 using BillingService.Infrastructure.Data;
 using BillingService.Infrastructure.Messaging;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.ConfigureHttpJsonOptions(options => {
+    options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
+});
 
 builder.Services.AddDbContext<BillingServiceContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -41,6 +47,7 @@ _ = consumer.ReceiveAsync(async evento => {
 }, CancellationToken.None);
 
 
+app.MapPropostaAprovadaEndpoints();
 app.Run();
 
 

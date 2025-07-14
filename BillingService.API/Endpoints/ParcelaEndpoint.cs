@@ -7,13 +7,18 @@ public static class ParcelaEndpoint
 {
     public static void MapParcelaEndpoints(this IEndpointRouteBuilder routes)
     {
-        var group = routes.MapGroup("/api/Parcela").WithTags(nameof(Parcela));
+        var group = routes.MapGroup("/api/Parcelas").WithTags(nameof(Parcela));
 
-        group.MapGet("/{id}", async (IParcelaService service, Guid id) =>
+        group.MapGet("/Fatura/{id}", async (IParcelaService service, Guid id) =>
         {
-            var listaDePropostasAprovadas = await service.GetAllAsync();
+            var listaDeParcelas = await service.GetParcelaByFaturaId(id);
 
-            return listaDePropostasAprovadas.Select(p => new {
+            return listaDeParcelas.Select(p => new {
+                p.Id,
+                p.Numero,
+                p.DataVencimento,
+                p.Valor,
+                p.Status
             });
         })
         .WithName("GetAllInstallmentByInvoice")

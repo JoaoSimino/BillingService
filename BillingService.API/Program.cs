@@ -50,6 +50,8 @@ _ = consumer.ReceiveAsync(async evento => {
 
 
 app.MapPropostaAprovadaEndpoints();
+app.MapParcelaEndpoints();
+app.MapFaturaEndpoints();
 app.Run();
 
 

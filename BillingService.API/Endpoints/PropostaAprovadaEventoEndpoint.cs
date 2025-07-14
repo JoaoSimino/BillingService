@@ -51,7 +51,7 @@ public static class PropostaAprovadaEventoEndpoint
         .WithName("GetAllPaymentOptionsByProposalId")
         .WithOpenApi();
 
-        group.MapPost("/{id}/opcoes-de-pagamento", async (
+        group.MapPost("/{id}/opcao-de-pagamento-selecionada", async (
             Guid id,
             IPropostaAprovadaEventService service,
             OpcaoPagamentoDto opcaoDto

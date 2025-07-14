@@ -83,8 +83,11 @@ public class PropostaAprovadaEventService : CrudService<PropostaAprovadaEvent>, 
                 Id = Guid.NewGuid(),
                 FaturaId = idFatura,
                 Numero = i + 1,
+                
                 Valor = propostaAprovada.OpcaoPagamentoSelecionada.ComJuros ?
-                    propostaAprovada.OpcaoPagamentoSelecionada.ValorTotalComJuros : propostaAprovada.OpcaoPagamentoSelecionada.ValorParcela,
+                    Math.Round(propostaAprovada.OpcaoPagamentoSelecionada.ValorTotalComJuros / numeroDeParcelas, 2) :
+                    Math.Round(propostaAprovada.OpcaoPagamentoSelecionada.ValorParcela / numeroDeParcelas, 2),
+
                 Status = StatusParcela.Pendente,
                 DataVencimento = DateTime.Now.AddMonths(i + 1),
             };
@@ -100,6 +103,7 @@ public class PropostaAprovadaEventService : CrudService<PropostaAprovadaEvent>, 
             Parcelas = ListaDeParcelas
         };
 
+        await _context.AddAsync(fatura);
         propostaAprovada.StatusProcessamento = StatusProcessamento.FaturaGerada;
         await _context.SaveChangesAsync();
         

@@ -41,6 +41,9 @@ public class BillingServiceContext : DbContext
         modelBuilder.Entity<Parcela>()
             .Property(p => p.Status)
             .HasConversion<string>();
+        modelBuilder.Entity<Parcela>()
+            .Property(p => p.DataVencimento)
+            .HasColumnType("date");
 
         base.OnModelCreating(modelBuilder);
     }

@@ -23,6 +23,16 @@ builder.Services.AddScoped<IPropostaAprovadaEventService, PropostaAprovadaEventS
 builder.Services.AddScoped<IFaturaService, FaturaService>();
 builder.Services.AddScoped<IParcelaService, ParcelaService>();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("PermissiveCors", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
+
 
 var app = builder.Build();
 
@@ -39,6 +49,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors("PermissiveCors");
 
 app.UseHttpsRedirection();
 

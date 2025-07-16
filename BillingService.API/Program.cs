@@ -38,8 +38,8 @@ var app = builder.Build();
 
 var consumer = app.Services.GetRequiredService<IMessageConsumer>();
 
-//migrar futuramente para solucao com BackgroundService , e e injetar os serviços corretamente no construtor.
-//como alternativa mais escalável
+//migrar futuramente para solucao com BackgroundService , e e injetar os servicos corretamente no construtor.
+//como alternativa mais escalavel
 using var scope = app.Services.CreateScope();
 var propostaService = scope.ServiceProvider.GetRequiredService<IPropostaAprovadaEventService>();
 

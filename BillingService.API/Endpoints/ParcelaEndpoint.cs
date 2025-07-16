@@ -25,6 +25,21 @@ public static class ParcelaEndpoint
         .WithName("GetAllInstallmentByInvoice")
         .WithOpenApi();
 
+        group.MapGet("/Cliente/{id}", async (IParcelaService service, Guid id) =>
+        {
+            var listaDeParcelas = await service.GetParcelaByClienteIdAsync(id);
+
+            return listaDeParcelas.Select(p => new {
+                p.Id,
+                p.Numero,
+                p.DataVencimento,
+                p.Valor,
+                p.Status
+            });
+        })
+        .WithName("GetAllInstallmentByClientId")
+        .WithOpenApi();
+
         group.MapPost("/{id}/Pagamento", async (Guid id,IParcelaService service) =>
         {
             await service.RealizarPagamentoAsync(id);

@@ -10,6 +10,16 @@ public class ParcelaService : CrudService<Parcela> ,IParcelaService
     {    
     }
 
+    public async Task<IEnumerable<Parcela>> GetParcelaByClienteIdAsync(Guid id)
+    {
+        return await _context.Set<Parcela>()
+            .Include(p => p.Fatura)
+            .ThenInclude(f => f.PropostaAprovadaEvent)
+            .Where(p => p.Fatura.PropostaAprovadaEvent.ClienteId == id.ToString())
+            .OrderBy(p => p.Numero)
+            .ToListAsync();
+    }
+
     public async Task<IEnumerable<Parcela>> GetParcelaByFaturaIdAsync(Guid faturaId)
     {
         return await _context.Set<Parcela>()

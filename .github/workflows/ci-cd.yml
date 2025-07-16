@@ -62,7 +62,7 @@ jobs:
 
 
       - name: Build Docker image
-        run: docker build -f ./BillingService.API/Docker/Dockerfile -t ${{ secrets.DOCKERHUB_USERNAME }}/BillingService-api:latest .
+        run: docker build -f ./BillingService.API/Docker/Dockerfile -t ${{ secrets.DOCKERHUB_USERNAME }}/billingservice-api:latest .
 
       - name: Push Docker image
         run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/BillingService-api:latest 

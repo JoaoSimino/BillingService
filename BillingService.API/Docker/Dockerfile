@@ -3,7 +3,7 @@ WORKDIR /app
 
 COPY *.sln ./
 COPY BillingService.API/*.csproj ./BillingService.API/
-COPY BillingService.Testes/*.csproj ./BillingService.Tests/
+COPY BillingService.Testes/*.csproj ./BillingService.Testes/
 COPY BillingService.Domain/*.csproj ./BillingService.Domain/
 COPY BillingService.Application/*.csproj ./BillingService.Application/
 COPY BillingService.Infrastructure/*.csproj ./BillingService.Infrastructure/

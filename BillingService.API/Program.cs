@@ -2,6 +2,7 @@ using BillingService.API.Endpoints;
 using BillingService.Application.Services;
 using BillingService.Infrastructure.Data;
 using BillingService.Infrastructure.Messaging;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 
@@ -35,6 +36,35 @@ builder.Services.AddCors(options =>
 
 
 var app = builder.Build();
+
+using (var scopedb = app.Services.CreateScope())
+{
+    var config = scopedb.ServiceProvider.GetRequiredService<IConfiguration>();
+    var fullConnectionString = config.GetConnectionString("DefaultConnection");
+
+    var builderWithoutDb = new SqlConnectionStringBuilder(fullConnectionString)
+    {
+        InitialCatalog = "master"
+    };
+
+    var databaseName = new SqlConnectionStringBuilder(fullConnectionString).InitialCatalog;
+
+    using var connection = new SqlConnection(builderWithoutDb.ConnectionString);
+    connection.Open();
+
+    var command = connection.CreateCommand();
+    command.CommandText = $@"
+        IF DB_ID(N'{databaseName}') IS NULL
+        BEGIN
+            CREATE DATABASE [{databaseName}];
+        END";
+    command.ExecuteNonQuery();
+
+    // Aplica migrations
+    var dbContext = scopedb.ServiceProvider.GetRequiredService<BillingServiceContext>();
+    dbContext.Database.Migrate();
+}
+
 
 var consumer = app.Services.GetRequiredService<IMessageConsumer>();
 

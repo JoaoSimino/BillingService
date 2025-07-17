@@ -1,5 +1,6 @@
 ﻿
 using BillingService.Domain.Entities;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
@@ -15,7 +16,7 @@ public class RabbitMQConsumer : IMessageConsumer
 
 
 
-    public RabbitMQConsumer(ILogger<RabbitMQConsumer> logger)
+    public RabbitMQConsumer(ILogger<RabbitMQConsumer> logger, IConfiguration configuration)
     {
         _logger = logger;
         _factory = new ConnectionFactory

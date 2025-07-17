@@ -20,7 +20,7 @@ public class RabbitMQConsumer : IMessageConsumer
         _logger = logger;
         _factory = new ConnectionFactory
         { 
-            HostName = "localhost",
+            HostName = configuration["RabbitMQ:HostName"] ??"localhost"
         };
     }
 
